@@ -1,0 +1,74 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+
+plugins {
+    id "com.jfrog.bintray" version "1.8.5"
+    id 'java'
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+    apply plugin: 'maven'
+    apply plugin: 'maven-publish'
+    apply plugin: 'java'
+}
+
+
+group 'de.hglabor.utils.noriskutils'
+version '0.0.1'
+
+sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            from components.java
+            groupId 'de.hglabor.utils.noriskutils'
+            artifactId 'NoRiskUtils'
+            version '0.0.1'
+        }
+    }
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publications = ['MyPublication']
+    pkg {
+        repo = 'utils'
+        name = 'NoRiskUtils'
+        userOrg = "hglabor"
+        licenses = ['Apache-2.0']
+        vcsUrl = "https://github.com/HGLabor/HGLaborKitAPI2.0.git"
+        version {
+            name = '0.0.1'
+            desc = 'Utils for HGLabor'
+            released = new Date()
+        }
+    }
+}
+
+
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
