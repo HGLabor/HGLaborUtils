@@ -6,7 +6,6 @@ buildscript {
 
 plugins {
     id "com.jfrog.bintray" version "1.8.5"
-    id 'java'
 }
 
 allprojects {
@@ -20,13 +19,14 @@ allprojects {
 
 
 group 'de.hglabor.utils.noriskutils'
-version '0.0.1'
+version '0.0.2'
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
 
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
@@ -44,7 +44,7 @@ publishing {
             from components.java
             groupId 'de.hglabor.utils.noriskutils'
             artifactId 'NoRiskUtils'
-            version '0.0.1'
+            version '0.0.2'
         }
     }
 }
@@ -58,9 +58,9 @@ bintray {
         name = 'NoRiskUtils'
         userOrg = "hglabor"
         licenses = ['Apache-2.0']
-        vcsUrl = "https://github.com/HGLabor/HGLaborKitAPI2.0.git"
+        vcsUrl = "https://github.com/HGLabor/HGLaborUtils.git"
         version {
-            name = '0.0.1'
+            name = '0.0.2'
             desc = 'Utils for HGLabor'
             released = new Date()
         }
