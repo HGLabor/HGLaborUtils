@@ -31,12 +31,10 @@ version '0.0.2'
 
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
 
-
 repositories {
     mavenCentral()
     mavenLocal()
     maven { url 'https://papermc.io/repo/repository/maven-public/' }
-    maven { url 'https://repo.dmulloy2.net/nexus/repository/public/' }
     maven { url 'http://maven.enginehub.org/repo/' }
     maven { url 'http://repo.md-5.net/content/groups/public/' }
     maven { url 'https://hglabor.bintray.com/plugins/' }
@@ -63,13 +61,12 @@ publishing {
 }
 
 dependencies {
-    compileOnly 'com.comphenix.protocol:ProtocolLib:4.6.0-SNAPSHOT'
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'com.github.dmulloy2:ProtocolLib:master-SNAPSHOT'
     compileOnly 'org.bukkit:craftbukkit:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.2.0-SNAPSHOT'
     compileOnly 'de.hglabor.utils:Localization:1.0'
 }
-
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
