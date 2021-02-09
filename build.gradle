@@ -5,7 +5,8 @@ buildscript {
 }
 
 plugins {
-    id "com.jfrog.bintray" version "1.8.5"
+    id 'java'
+    id("maven-publish")
 }
 
 allprojects {
@@ -29,42 +30,30 @@ repositories {
     mavenLocal()
 }
 
-dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-}
-
-test {
-    useJUnitPlatform()
-}
-
 publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/HGLabor/hglaborutils")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
+        }
+    }
     publications {
-        MyPublication(MavenPublication) {
-            from components.java
-            groupId 'de.hglabor.utils.noriskutils'
-            artifactId 'NoRiskUtils'
-            version '0.0.2'
+        gpr(MavenPublication) {
+            from(components.java)
         }
     }
 }
 
-bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
-    publications = ['MyPublication']
-    pkg {
-        repo = 'utils'
-        name = 'NoRiskUtils'
-        userOrg = "hglabor"
-        licenses = ['Apache-2.0']
-        vcsUrl = "https://github.com/HGLabor/HGLaborUtils.git"
-        version {
-            name = '0.0.2'
-            desc = 'Utils for HGLabor'
-            released = new Date()
-        }
-    }
+dependencies {
+    compileOnly 'com.comphenix.protocol:ProtocolLib:4.6.0-SNAPSHOT'
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'org.bukkit:craftbukkit:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.2.0-SNAPSHOT'
+    compileOnly 'de.hglabor.utils:Localization:1.0'
 }
 
 
