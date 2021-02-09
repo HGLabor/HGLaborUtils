@@ -9,6 +9,13 @@ plugins {
     id("maven-publish")
 }
 
+ext.localProps = new Properties()
+try {
+    localProps.load(file("local.properties").newReader())
+} catch (Exception ignored) {
+    // scheiß drauf groovy ist kacke
+}
+
 allprojects {
     repositories {
         jcenter()
@@ -28,53 +35,23 @@ sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
 repositories {
     mavenCentral()
     mavenLocal()
-    maven {
-        url = uri('https://papermc.io/repo/repository/maven-public/')
-    }
-
-    maven {
-        url = uri('https://repo.dmulloy2.net/nexus/repository/public/')
-    }
-
-    maven {
-        url = uri('https://oss.sonatype.org/content/groups/public/')
-    }
-
-    maven {
-        url = uri('http://maven.enginehub.org/repo/')
-    }
-
-    maven {
-        url = uri('http://repo.md-5.net/content/groups/public/')
-    }
-
-    maven {
-        name = "jitpack"
-        url = "https://jitpack.io/"
-    }
-
-    maven {
-        url = uri('https://hglabor.bintray.com/plugins/')
-    }
-
-    maven {
-        url = uri('https://hglabor.bintray.com/utils/')
-    }
-
-    maven {
-        url = uri('https://repo.maven.apache.org/maven2/')
-    }
-
+    maven { url 'https://papermc.io/repo/repository/maven-public/' }
+    maven { url 'https://repo.dmulloy2.net/nexus/repository/public/' }
+    maven { url 'http://maven.enginehub.org/repo/' }
+    maven { url 'http://repo.md-5.net/content/groups/public/' }
+    maven { url 'https://hglabor.bintray.com/plugins/' }
+    maven { url 'https://hglabor.bintray.com/utils/' }
+    maven { url "https://jitpack.io/" }
 }
 
 publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/HGLabor/HGLaborUtils")
+            url = "https://maven.pkg.github.com/HGLabor/HGLaborUtils"
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+                username = localProps["gpr.user"] ?: System.getenv("USERNAME")
+                password = localProps["gpr.key"] ?: System.getenv("TOKEN")
             }
         }
     }
