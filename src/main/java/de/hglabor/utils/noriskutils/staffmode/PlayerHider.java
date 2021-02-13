@@ -2,7 +2,9 @@ package de.hglabor.utils.noriskutils.staffmode;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashSet;
@@ -17,6 +19,22 @@ public class PlayerHider implements Listener {
         this.supplier = supplier;
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    @EventHandler
+    private void onPlayerJoin(PlayerJoinEvent event) {
+        //haha joint
+        Player joined = event.getPlayer();
+        StaffPlayer staffPlayer = supplier.getStaffPlayer(joined);
+        if (staffPlayer.canSeeStaffModePlayers()) {
+            return;
+        }
+        for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
+            StaffPlayer otherStaffPlayer = supplier.getStaffPlayer(otherPlayer);
+            if (otherStaffPlayer.isStaffMode() && !otherStaffPlayer.isVisible()) {
+                joined.hidePlayer(plugin, otherPlayer);
+            }
+        }
     }
 
     public void hide(Player playerToHide) {
