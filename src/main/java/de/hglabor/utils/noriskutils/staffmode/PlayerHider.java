@@ -41,6 +41,7 @@ public class PlayerHider implements Listener {
 
     public void hide(Player playerToHide) {
         supplier.getStaffPlayer(playerToHide).setVisible(false);
+        playerToHide.sendActionBar(Localization.INSTANCE.getMessage("staffmode.hidden", ChatUtils.getPlayerLocale(playerToHide)));
         for (Player player : Bukkit.getOnlinePlayers()) {
             StaffPlayer staffPlayer = supplier.getStaffPlayer(player);
             if (player.hasPermission("hglabor.staffmode")) {
@@ -53,6 +54,7 @@ public class PlayerHider implements Listener {
 
     public void show(Player playerToShow) {
         supplier.getStaffPlayer(playerToShow).setVisible(true);
+        playerToShow.sendActionBar(Localization.INSTANCE.getMessage("staffmode.visible", ChatUtils.getPlayerLocale(playerToShow)));
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.showPlayer(plugin, playerToShow);
         }
