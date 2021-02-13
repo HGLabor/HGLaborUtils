@@ -16,6 +16,10 @@ public final class ChatUtils {
         Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(Localization.INSTANCE.getMessage(key, values, getPlayerLocale(player.getUniqueId()))));
     }
 
+    public static void broadcastMessage(String key) {
+        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(Localization.INSTANCE.getMessage(key, getPlayerLocale(player.getUniqueId()))));
+    }
+
     public static Locale getPlayerLocale(Player player) {
         return getPlayerLocale(player.getUniqueId());
     }
