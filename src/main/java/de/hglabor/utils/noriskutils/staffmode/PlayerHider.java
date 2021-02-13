@@ -1,5 +1,7 @@
 package de.hglabor.utils.noriskutils.staffmode;
 
+import de.hglabor.utils.localization.Localization;
+import de.hglabor.utils.noriskutils.ChatUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -76,5 +78,17 @@ public class PlayerHider implements Listener {
 
     public StaffPlayerSupplier getSupplier() {
         return supplier;
+    }
+
+    public void sendHideInformation() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            StaffPlayer staffPlayer = supplier.getStaffPlayer(player);
+            if (!staffPlayer.isStaffMode()) continue;
+            if (staffPlayer.isVisible()) {
+                player.sendActionBar(Localization.INSTANCE.getMessage("staffmode.visible", ChatUtils.getPlayerLocale(player)));
+            } else {
+                player.sendActionBar(Localization.INSTANCE.getMessage("staffmode.hidden", ChatUtils.getPlayerLocale(player)));
+            }
+        }
     }
 }
