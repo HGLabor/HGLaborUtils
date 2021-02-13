@@ -10,4 +10,10 @@ public interface StaffPlayer {
     void printStatsOf(Player player);
 
     boolean isVisible();
+
+    void setVisible(boolean visible);
+
+    void setCanSeeStaffModePlayers(boolean value);
+
+    boolean canSeeStaffModePlayers();
 }

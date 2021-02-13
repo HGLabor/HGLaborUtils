@@ -1,6 +1,8 @@
 package de.hglabor.utils.noriskutils.command;
 
-import de.hglabor.utils.noriskutils.HideUtils;
+import de.hglabor.utils.noriskutils.staffmode.PlayerHider;
+import de.hglabor.utils.noriskutils.staffmode.StaffModeManager;
+import de.hglabor.utils.noriskutils.staffmode.StaffPlayer;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.BooleanArgument;
 
@@ -12,12 +14,12 @@ public class HidePlayersCommand {
                 .withArguments(new BooleanArgument("show"))
                 .executesPlayer((player, objects) -> {
                     boolean showPlayers = (boolean) objects[0];
+                    PlayerHider playerHider = StaffModeManager.INSTANCE.getPlayerHider();
+                    playerHider.getSupplier().getStaffPlayer(player).setCanSeeStaffModePlayers(showPlayers);
                     if (showPlayers) {
-                        //TODO alle specs shown
-                        HideUtils.INSTANCE.remove(player);
+                        playerHider.showEveryoneInStaffMode(player);
                     } else {
-                        //TODO alle specs hiden
-                        HideUtils.INSTANCE.put(player);
+                        playerHider.hideEveryoneInStaffMode(player);
                     }
                 })
                 .register();

@@ -9,6 +9,7 @@ import java.util.List;
 
 public final class StaffModeManager {
     public final static StaffModeManager INSTANCE = new StaffModeManager();
+    protected PlayerHider playerHider;
     protected final ItemStack INVENTORY_VIEWER;
     protected final ItemStack RANDOM_TELEPORT;
     protected final ItemStack PLAYER_STATS;
@@ -22,6 +23,14 @@ public final class StaffModeManager {
     }
 
     public List<ItemStack> getStaffModeItems() {
-        return ImmutableList.of(RANDOM_TELEPORT, INVENTORY_VIEWER, PLAYER_STATS,TOGGLE_VISIBILITY);
+        return ImmutableList.of(RANDOM_TELEPORT, INVENTORY_VIEWER, PLAYER_STATS, TOGGLE_VISIBILITY);
+    }
+
+    public PlayerHider getPlayerHider() {
+        return playerHider;
+    }
+
+    public void setPlayerHider(PlayerHider playerHider) {
+        this.playerHider = playerHider;
     }
 }

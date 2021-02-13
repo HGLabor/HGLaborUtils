@@ -38,6 +38,12 @@ public class StaffModeListener implements Listener {
             if (staffPlayer.isStaffMode() && item != null) {
                 if (item.isSimilar(StaffModeManager.INSTANCE.RANDOM_TELEPORT)) {
                     player.teleport(staffPlayerSupplier.getRandomActivePlayer());
+                } else if (item.isSimilar(StaffModeManager.INSTANCE.TOGGLE_VISIBILITY)) {
+                    if (staffPlayer.isVisible()) {
+                        StaffModeManager.INSTANCE.getPlayerHider().hide(player);
+                    } else {
+                        StaffModeManager.INSTANCE.getPlayerHider().show(player);
+                    }
                 }
             }
         }
