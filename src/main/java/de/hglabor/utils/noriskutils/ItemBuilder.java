@@ -32,7 +32,6 @@ public final class ItemBuilder {
         itemMeta = item.getItemMeta();
     }
 
-
     public ItemBuilder setName(String name) {
         itemMeta.setDisplayName(name);
         return this;
@@ -93,8 +92,8 @@ public final class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder setUnbreakable() {
-        itemMeta.setUnbreakable(true);
+    public ItemBuilder setUnbreakable(boolean unbreakable) {
+        itemMeta.setUnbreakable(unbreakable);
         return this;
     }
 
