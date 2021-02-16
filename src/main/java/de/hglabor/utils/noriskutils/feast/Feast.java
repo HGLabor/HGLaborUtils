@@ -13,6 +13,8 @@ import de.hglabor.utils.noriskutils.WorldEditUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -35,13 +37,14 @@ public class Feast implements Listener {
     private Material platformMaterial;
     private int radius, timer, totalTime, airHeight, maxItemsInChest;
     private boolean inPreparation, isFinished, shouldDamageItems;
-    private BossBar feastBossBar;
+    private final BossBar feastBossBar;
 
     public Feast(JavaPlugin plugin, World world) {
         this.plugin = plugin;
         this.world = world;
         this.feastBlocks = new HashSet<>();
         this.maxItemsInChest = 6;
+        this.feastBossBar = Bukkit.createBossBar("Feast", BarColor.GREEN, BarStyle.SOLID);
     }
 
     public Feast center(Location feastCenter) {
@@ -61,6 +64,7 @@ public class Feast implements Listener {
 
     public Feast timer(int timer) {
         this.timer = timer;
+        this.totalTime = timer;
         return this;
     }
 
@@ -76,16 +80,6 @@ public class Feast implements Listener {
 
     public Feast damageItems(boolean shouldDamage) {
         this.shouldDamageItems = shouldDamage;
-        return this;
-    }
-
-    public Feast totalTime(int totalTime) {
-        this.totalTime = totalTime;
-        return this;
-    }
-
-    public Feast bossbar(BossBar feastBossBar) {
-        this.feastBossBar = feastBossBar;
         return this;
     }
 
