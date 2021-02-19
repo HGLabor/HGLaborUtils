@@ -45,6 +45,10 @@ repositories {
     maven { url = "https://raw.githubusercontent.com/JorelAli/CommandAPI/mvn-repo/" }
     maven { url = "https://repo.codemc.org/repository/maven-public/" }
     // COMMAND API
+
+    //FAWE
+    maven { url = uri("https://mvn.intellectualsites.com/content/repositories/releases/") }
+    //FAWE
 }
 
 publishing {
@@ -70,7 +74,7 @@ dependencies {
     compileOnly 'org.bukkit:craftbukkit:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'dev.jorel:commandapi-shade:5.8'
     compileOnly 'com.github.dmulloy2:ProtocolLib:master-SNAPSHOT'
-    compileOnly 'com.sk89q.worldedit:worldedit-bukkit:7.2.0-SNAPSHOT'
+    compileOnly 'com.intellectualsites.fawe:FAWE-Bukkit:1.16-583'
     compileOnly 'de.hglabor:localization:0.0.2'
     compileOnly 'redis.clients:jedis:3.5.1'
 }

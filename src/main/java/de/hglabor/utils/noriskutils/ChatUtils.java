@@ -2,6 +2,7 @@ package de.hglabor.utils.noriskutils;
 
 import de.hglabor.utils.localization.Localization;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Locale;
@@ -18,6 +19,14 @@ public final class ChatUtils {
 
     public static void broadcastMessage(String key) {
         Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(Localization.INSTANCE.getMessage(key, getPlayerLocale(player.getUniqueId()))));
+    }
+
+    public static Locale getPlayerLocale(CommandSender sender) {
+        if (sender instanceof Player) {
+            return getPlayerLocale(((Player) sender).getUniqueId());
+        } else {
+            return Locale.ENGLISH;
+        }
     }
 
     public static Locale getPlayerLocale(Player player) {
