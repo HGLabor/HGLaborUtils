@@ -15,7 +15,7 @@ public final class JedisUtils {
         jedisPool = new JedisPool(JedisUtils.buildPoolConfig(), Protocol.DEFAULT_HOST, Protocol.DEFAULT_PORT, Protocol.DEFAULT_TIMEOUT, password);
     }
 
-    public static JedisPoolConfig buildPoolConfig() {
+    private static JedisPoolConfig buildPoolConfig() {
         JedisPoolConfig poolConfig = new JedisPoolConfig();
         poolConfig.setMaxTotal(128);
         poolConfig.setMaxIdle(128);
