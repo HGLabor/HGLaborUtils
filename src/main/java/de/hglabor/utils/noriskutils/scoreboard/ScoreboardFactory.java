@@ -32,7 +32,7 @@ public final class ScoreboardFactory {
     }
 
     public static void addEntry(ScoreboardPlayer scoreboardPlayer, String name, String prefix, int score) {
-        addEntry(scoreboardPlayer, name, "", score);
+        addEntry(scoreboardPlayer, name, prefix, "", score);
     }
 
     public static void updateEntry(ScoreboardPlayer scoreboardPlayer, String name, String prefix, String suffix) {
