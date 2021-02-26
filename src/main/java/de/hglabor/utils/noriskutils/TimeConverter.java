@@ -9,4 +9,11 @@ public final class TimeConverter {
         int seconds = totalSecs % 60;
         return String.format("%02d:%02d", minutes, seconds);
     }
+
+    public static String stringify(int totalSecs, String format) {
+        int hours = totalSecs / 3600;
+        int minutes = (totalSecs % 3600) / 60;
+        int seconds = totalSecs % 60;
+        return String.format(format, minutes, seconds);
+    }
 }
