@@ -31,6 +31,10 @@ public final class ScoreboardFactory {
         scoreboardPlayer.getObjective().getScore(ChatColor.values()[score] + "" + ChatColor.WHITE).setScore(score);
     }
 
+    public static void addEntry(ScoreboardPlayer scoreboardPlayer, String name, String prefix, int score) {
+        addEntry(scoreboardPlayer, name, "", score);
+    }
+
     public static void updateEntry(ScoreboardPlayer scoreboardPlayer, String name, String prefix, String suffix) {
         if (scoreboardPlayer != null && scoreboardPlayer.getScoreboard() != null) {
             Team team = scoreboardPlayer.getScoreboard().getTeam(name);
@@ -39,6 +43,10 @@ public final class ScoreboardFactory {
                 team.setSuffix(suffix);
             }
         }
+    }
+
+    public static void updateEntry(ScoreboardPlayer scoreboardPlayer, String name, String prefix) {
+        updateEntry(scoreboardPlayer, name, prefix, "");
     }
 
     public static void removeEntry(ScoreboardPlayer scoreboardPlayer, String name, int score) {
