@@ -14,6 +14,6 @@ public final class TimeConverter {
         int hours = totalSecs / 3600;
         int minutes = (totalSecs % 3600) / 60;
         int seconds = totalSecs % 60;
-        return String.format(format, minutes, seconds);
+        return String.format(format,hours, minutes, seconds);
     }
 }
