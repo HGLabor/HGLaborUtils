@@ -107,6 +107,17 @@ public final class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder hideEnchants() {
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        return this;
+    }
+
+
+    public ItemBuilder setLocalizedName(String name) {
+        itemMeta.setLocalizedName(name);
+        return this;
+    }
+
     public ItemStack build() {
         item.setItemMeta(itemMeta);
         return item;
