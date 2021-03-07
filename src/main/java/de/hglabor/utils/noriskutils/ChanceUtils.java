@@ -15,4 +15,12 @@ public final class ChanceUtils {
     public static int getRandomNumber(int max, int min) {
         return random.nextInt(max - min) + min;
     }
+
+    public static double getRandomDouble(double min, double max) {
+        double r = random.nextDouble();
+        r = r * (max - min) + min;
+        if (r >= max)
+            r = Math.nextDown(max);
+        return r;
+    }
 }
