@@ -11,6 +11,8 @@ import de.hglabor.utils.noriskutils.RandomCollection;
 import de.hglabor.utils.noriskutils.TimeConverter;
 import de.hglabor.utils.noriskutils.WorldEditUtils;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.boss.BarColor;
@@ -33,11 +35,11 @@ public class Feast implements Listener {
     private final Set<Block> feastBlocks;
     private final JavaPlugin plugin;
     private final World world;
+    private final BossBar feastBossBar;
     private Location feastCenter;
     private Material platformMaterial;
     private int radius, timer, totalTime, airHeight, maxItemsInChest;
     private boolean inPreparation, isFinished, shouldDamageItems;
-    private final BossBar feastBossBar;
 
     public Feast(JavaPlugin plugin, World world) {
         this.plugin = plugin;
@@ -159,7 +161,7 @@ public class Feast implements Listener {
         lootPool.add(20, diamondItems);
         lootPool.add(33, sizeableItems);
         lootPool.add(33, singleItems);
-        lootPool.add(10, netheriteItems);
+        lootPool.add(3, netheriteItems);
 
 
         for (Location chestLocation : chestLocations) {
@@ -203,8 +205,8 @@ public class Feast implements Listener {
 
                 if (timer % 60 == 0 || timer < 10) {
                     ChatUtils.broadcastMessage("feast.broadcastMessage", ImmutableMap.of(
-                                    "centerLocation", printFeastCenter(),
-                                    "timeString", TimeConverter.stringify(timer)));
+                            "centerLocation", printFeastCenter(),
+                            "timeString", TimeConverter.stringify(timer)));
                 }
 
                 timer--;
