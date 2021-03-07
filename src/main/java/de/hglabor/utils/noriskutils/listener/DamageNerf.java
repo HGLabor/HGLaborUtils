@@ -6,7 +6,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
 public class DamageNerf implements Listener {
-    private final String[] nerfedItems = {"_AXE", "_SHOVEL", "_PICKAXE"};
+    private final String[] nerfedItems;
+    private final double swordNerf;
+    private final double otherNerf;
+
+    public DamageNerf(double swordNerf, double otherNerf) {
+        this.swordNerf = swordNerf;
+        this.otherNerf = otherNerf;
+        this.nerfedItems = new String[]{"_AXE", "_SHOVEL", "_PICKAXE"};
+    }
 
     @EventHandler
     public void onDamageing(EntityDamageByEntityEvent event) {
@@ -14,12 +22,12 @@ public class DamageNerf implements Listener {
             Player player = (Player) event.getDamager();
             String itemName = player.getInventory().getItemInMainHand().getType().name();
             if (itemName.endsWith("_SWORD")) {
-                event.setDamage(event.getDamage() * 0.5);
+                event.setDamage(event.getDamage() * swordNerf);
                 return;
             }
             for (String nerfedItem : nerfedItems) {
                 if (itemName.endsWith(nerfedItem)) {
-                    event.setDamage(event.getDamage() * 0.2);
+                    event.setDamage(event.getDamage() * otherNerf);
                 }
             }
         }
