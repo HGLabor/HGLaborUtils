@@ -1,5 +1,7 @@
 package de.hglabor.utils.noriskutils;
 
+import org.bukkit.Material;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -177,6 +179,8 @@ public final class ReflectionUtils {
         return isChar(field.getType());
     }
 
+    public static boolean isMaterial(Field field) { return isMaterial(field.getType()); }
+
     public static boolean isByte(Class<?> clazz) {
         return clazz == byte.class || clazz == Byte.class;
     }
@@ -208,4 +212,6 @@ public final class ReflectionUtils {
     public static boolean isChar(Class<?> clazz) {
         return clazz == char.class || clazz == Character.class;
     }
+
+    public static boolean isMaterial(Class<?> clazz) { return clazz.equals(Material.class); }
 }
