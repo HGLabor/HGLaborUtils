@@ -1,28 +1,16 @@
-plugins {
-    id 'java'
-    id("maven-publish")
-}
-
-ext.localProps = new Properties()
-try {
-    localProps.load(file("local.properties").newReader())
-} catch (Exception ignored) {
-    // scheiß drauf groovy ist kacke
-}
-
 allprojects {
     repositories {
         jcenter()
     }
     apply plugin: 'maven'
     apply plugin: 'maven-publish'
+    apply plugin: 'signing'
     apply plugin: 'java'
 }
 
-
 group 'de.hglabor'
 version '0.0.4'
-
+description "Utils for HGLabor Network"
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
 
 repositories {
@@ -31,13 +19,6 @@ repositories {
     maven { url 'https://papermc.io/repo/repository/maven-public/' }
     maven { url 'http://maven.enginehub.org/repo/' }
     maven { url 'http://repo.md-5.net/content/groups/public/' }
-    maven {
-        credentials {
-            username = localProps["gpr.user"] ?: System.getenv("USERNAME")
-            password = localProps["gpr.key"] ?: System.getenv("TOKEN")
-        }
-        url 'https://maven.pkg.github.com/HGLabor/Localization'
-    }
     maven { url 'https://hglabor.bintray.com/plugins/' }
     maven { url 'https://hglabor.bintray.com/utils/' }
     maven { url "https://jitpack.io/" }
@@ -51,20 +32,44 @@ repositories {
     //FAWE
 }
 
-publishing {
+uploadArchives {
     repositories {
-        maven {
-            name = "GitHubPackages"
-            url = "https://maven.pkg.github.com/HGLabor/HGLaborUtils"
-            credentials {
-                username = localProps["gpr.user"] ?: System.getenv("USERNAME")
-                password = localProps["gpr.key"] ?: System.getenv("TOKEN")
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
             }
-        }
-    }
-    publications {
-        gpr(MavenPublication) {
-            from(components.java)
+
+            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'hglabor-utils'
+                packaging 'jar'
+                description "Utils for HGLabor Network"
+                url 'https://github.com/HGLabor/HGLaborUtils/tree/main'
+
+                scm {
+                    connection "scm:git:git://github.com/HGLabor/HGLaborUtils.git"
+                    developerConnection "scm:git:ssh://github.com:HGLabor/HGLaborUtils.git"
+                    url "https://github.com/HGLabor/HGLaborUtils"
+                }
+
+                developers {
+                    developer {
+                        id 'copyandexecute'
+                    }
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+            }
         }
     }
 }
@@ -75,10 +80,29 @@ dependencies {
     compileOnly 'dev.jorel:commandapi-shade:5.8'
     compileOnly 'com.github.dmulloy2:ProtocolLib:master-SNAPSHOT'
     compileOnly 'com.intellectualsites.fawe:FAWE-Bukkit:1.16-583'
-    compileOnly 'de.hglabor:localization:0.0.2'
+    compileOnly 'de.hglabor:localization:0.0.5'
     compileOnly 'redis.clients:jedis:3.5.1'
 }
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
