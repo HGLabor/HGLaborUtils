@@ -14,26 +14,26 @@ public final class ChatUtils {
     }
 
     public static void broadcastMessage(String key, Map<String, String> values) {
-        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(Localization.INSTANCE.getMessage(key, values, getPlayerLocale(player.getUniqueId()))));
+        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(Localization.INSTANCE.getMessage(key, values, locale(player.getUniqueId()))));
     }
 
     public static void broadcastMessage(String key) {
-        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(Localization.INSTANCE.getMessage(key, getPlayerLocale(player.getUniqueId()))));
+        Bukkit.getOnlinePlayers().forEach(player -> player.sendMessage(Localization.INSTANCE.getMessage(key, locale(player.getUniqueId()))));
     }
 
-    public static Locale getPlayerLocale(CommandSender sender) {
+    public static Locale locale(CommandSender sender) {
         if (sender instanceof Player) {
-            return getPlayerLocale(((Player) sender).getUniqueId());
+            return locale(((Player) sender).getUniqueId());
         } else {
             return Locale.ENGLISH;
         }
     }
 
-    public static Locale getPlayerLocale(Player player) {
-        return getPlayerLocale(player.getUniqueId());
+    public static Locale locale(Player player) {
+        return locale(player.getUniqueId());
     }
 
-    public static Locale getPlayerLocale(UUID uuid) {
+    public static Locale locale(UUID uuid) {
         Player player = Bukkit.getPlayer(uuid);
         if (player != null) {
             Locale playerLocale = new Locale(player.getLocale());

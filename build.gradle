@@ -9,7 +9,7 @@ allprojects {
 }
 
 group 'de.hglabor'
-version '0.0.4'
+version '0.0.5'
 description "Utils for HGLabor Network"
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
 
@@ -19,17 +19,20 @@ repositories {
     maven { url 'https://papermc.io/repo/repository/maven-public/' }
     maven { url 'http://maven.enginehub.org/repo/' }
     maven { url 'http://repo.md-5.net/content/groups/public/' }
-    maven { url 'https://hglabor.bintray.com/plugins/' }
-    maven { url 'https://hglabor.bintray.com/utils/' }
     maven { url "https://jitpack.io/" }
     // COMMAND API
     maven { url = "https://raw.githubusercontent.com/JorelAli/CommandAPI/mvn-repo/" }
     maven { url = "https://repo.codemc.org/repository/maven-public/" }
-    // COMMAND API
-
     //FAWE
     maven { url = uri("https://mvn.intellectualsites.com/content/repositories/releases/") }
-    //FAWE
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            from(components.java)
+        }
+    }
 }
 
 uploadArchives {
@@ -80,8 +83,7 @@ dependencies {
     compileOnly 'dev.jorel:commandapi-shade:5.8'
     compileOnly 'com.github.dmulloy2:ProtocolLib:master-SNAPSHOT'
     compileOnly 'com.intellectualsites.fawe:FAWE-Bukkit:1.16-583'
-    compileOnly 'de.hglabor:localization:0.0.5'
-    compileOnly 'redis.clients:jedis:3.5.1'
+    compileOnly 'de.hglabor:localization:0.0.6'
 }
 
 tasks.withType(JavaCompile) {

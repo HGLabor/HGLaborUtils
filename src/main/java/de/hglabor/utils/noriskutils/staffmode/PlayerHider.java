@@ -9,10 +9,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-
 public class PlayerHider implements Listener {
     private final JavaPlugin plugin;
     private final StaffPlayerSupplier supplier;
@@ -41,7 +37,7 @@ public class PlayerHider implements Listener {
 
     public void hide(Player playerToHide) {
         supplier.getStaffPlayer(playerToHide).setVisible(false);
-        playerToHide.sendActionBar(Localization.INSTANCE.getMessage("staffmode.hidden", ChatUtils.getPlayerLocale(playerToHide)));
+        playerToHide.sendActionBar(Localization.INSTANCE.getMessage("staffmode.hidden", ChatUtils.locale(playerToHide)));
         for (Player player : Bukkit.getOnlinePlayers()) {
             StaffPlayer staffPlayer = supplier.getStaffPlayer(player);
             if (player.hasPermission("hglabor.staffmode")) {
@@ -54,7 +50,7 @@ public class PlayerHider implements Listener {
 
     public void show(Player playerToShow) {
         supplier.getStaffPlayer(playerToShow).setVisible(true);
-        playerToShow.sendActionBar(Localization.INSTANCE.getMessage("staffmode.visible", ChatUtils.getPlayerLocale(playerToShow)));
+        playerToShow.sendActionBar(Localization.INSTANCE.getMessage("staffmode.visible", ChatUtils.locale(playerToShow)));
         for (Player player : Bukkit.getOnlinePlayers()) {
             player.showPlayer(plugin, playerToShow);
         }
@@ -87,9 +83,9 @@ public class PlayerHider implements Listener {
             StaffPlayer staffPlayer = supplier.getStaffPlayer(player);
             if (!staffPlayer.isStaffMode()) continue;
             if (staffPlayer.isVisible()) {
-                player.sendActionBar(Localization.INSTANCE.getMessage("staffmode.visible", ChatUtils.getPlayerLocale(player)));
+                player.sendActionBar(Localization.INSTANCE.getMessage("staffmode.visible", ChatUtils.locale(player)));
             } else {
-                player.sendActionBar(Localization.INSTANCE.getMessage("staffmode.hidden", ChatUtils.getPlayerLocale(player)));
+                player.sendActionBar(Localization.INSTANCE.getMessage("staffmode.hidden", ChatUtils.locale(player)));
             }
         }
     }
