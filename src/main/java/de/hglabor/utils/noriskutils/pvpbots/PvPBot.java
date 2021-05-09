@@ -38,6 +38,7 @@ public class PvPBot extends EntityZombie {
         this.getWorld().addEntity(this);
         this.getEntity().setMetadata(META_DATA, new FixedMetadataValue(plugin, ""));
         this.getEntity().setShouldBurnInDay(false);
+        this.getEntity().setRemoveWhenFarAway(false);
         this.setCustomName(new ChatComponentText(name));
         this.setCustomNameVisible(true);
         this.playerDisguise = new PlayerDisguise(name);

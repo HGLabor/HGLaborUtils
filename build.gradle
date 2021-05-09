@@ -9,7 +9,7 @@ allprojects {
 }
 
 group 'de.hglabor'
-version '0.0.7'
+version '0.0.9'
 description "Utils for HGLabor Network"
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
 
@@ -85,6 +85,8 @@ dependencies {
     compileOnly 'com.intellectualsites.fawe:FAWE-Bukkit:1.16-583'
     compileOnly 'de.hglabor:localization:0.0.6'
     compileOnly 'LibsDisguises:LibsDisguises:10.0.21'
+    compileOnly 'net.luckperms:api:5.3'
+    compileOnly 'redis.clients:jedis:3.5.1'
 }
 
 tasks.withType(JavaCompile) {
