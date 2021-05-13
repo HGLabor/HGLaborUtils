@@ -22,8 +22,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -160,8 +163,8 @@ public class Feast implements Listener {
         ItemStack strengthPotion = new ItemStack(Material.SPLASH_POTION);
         PotionMeta meta = (PotionMeta) strengthPotion.getItemMeta();
         meta.addCustomEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 2500, 0), true);
-        potion.setItemMeta(meta);
-        singleItems.add(0.2, strengthPotion)
+        strengthPotion.setItemMeta(meta);
+        singleItems.add(0.2, strengthPotion);
 
         RandomCollection<RandomCollection<ItemStack>> lootPool = new RandomCollection<>();
         lootPool.add(20, diamondItems);
