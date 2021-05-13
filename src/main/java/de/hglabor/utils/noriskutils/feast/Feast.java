@@ -157,6 +157,12 @@ public class Feast implements Listener {
         singleItems.add(1, new ItemStack(Material.LAVA_BUCKET));
         singleItems.add(1, new ItemStack(Material.WATER_BUCKET));
 
+        ItemStack strengthPotion = new ItemStack(Material.SPLASH_POTION);
+        PotionMeta meta = (PotionMeta) strengthPotion.getItemMeta();
+        meta.addCustomEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 2500, 0), true);
+        potion.setItemMeta(meta);
+        singleItems.add(0.2, strengthPotion)
+
         RandomCollection<RandomCollection<ItemStack>> lootPool = new RandomCollection<>();
         lootPool.add(20, diamondItems);
         lootPool.add(33, sizeableItems);
