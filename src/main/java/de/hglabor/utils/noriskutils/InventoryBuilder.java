@@ -20,7 +20,7 @@ public final class InventoryBuilder {
     private int inventorySlots;
     private Plugin plugin;
     private HashMap<Integer, ItemStack> items;
-    private HashMap<ItemStack, Consumer<Player>> clickActions;
+    private HashMap<ItemStack, Consumer<InventoryClickEvent>> clickActions;
 
     public InventoryBuilder(Plugin plugin) {
         inventoryType = null;
@@ -33,11 +33,11 @@ public final class InventoryBuilder {
 
     public InventoryBuilder withItem(ItemStack itemStack, int slot) {
         items.put(slot, itemStack);
-        clickActions.put(itemStack, player -> {});
+        clickActions.put(itemStack, clickEvent -> {});
         return this;
     }
 
-    public InventoryBuilder withItem(ItemStack itemStack, int slot, Consumer<Player> clickAction) {
+    public InventoryBuilder withItem(ItemStack itemStack, int slot, Consumer<InventoryClickEvent> clickAction) {
         items.put(slot, itemStack);
         clickActions.put(itemStack, clickAction);
         return this;
@@ -67,7 +67,7 @@ public final class InventoryBuilder {
         }
         for (int i : items.keySet()) {
             inventory.setItem(i, items.get(i));
-            Consumer<Player> consumer = clickActions.get(items.get(i));
+            Consumer<InventoryClickEvent> consumer = clickActions.get(items.get(i));
             Bukkit.getPluginManager().registerEvents(new Listener() {
                 @EventHandler
                 public void onInventoryClick(InventoryClickEvent event) {
@@ -77,7 +77,7 @@ public final class InventoryBuilder {
                             if(event.getCurrentItem() != null) {
                                 if(event.getCurrentItem().isSimilar(items.get(i))) {
                                     event.setCancelled(true);
-                                    consumer.accept(player);
+                                    consumer.accept(event);
                                     event.getHandlers().unregister(this);
                                 }
                             }
