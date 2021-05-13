@@ -11,12 +11,14 @@ public final class ScoreboardFactory {
     private ScoreboardFactory() {
     }
 
-    public static void create(ScoreboardPlayer scoreboardPlayer) {
+    public static void create(ScoreboardPlayer scoreboardPlayer, String title, boolean isCollision) {
         if (scoreboardPlayer.getScoreboard() == null && scoreboardPlayer.getObjective() == null) {
             scoreboardPlayer.setScoreboard(Bukkit.getScoreboardManager().getNewScoreboard());
-            Team collision = scoreboardPlayer.getScoreboard().registerNewTeam("collision");
-            collision.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
-            scoreboardPlayer.setObjective(scoreboardPlayer.getScoreboard().registerNewObjective("aaa", "dummy", ChatColor.BOLD + "HGLabor"));
+            if (isCollision) {
+                Team collision = scoreboardPlayer.getScoreboard().registerNewTeam("collision");
+                collision.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+            }
+            scoreboardPlayer.setObjective(scoreboardPlayer.getScoreboard().registerNewObjective("aaa", "dummy", title));
             scoreboardPlayer.getObjective().setDisplaySlot(DisplaySlot.SIDEBAR);
         }
         Player player = scoreboardPlayer.getPlayer();
