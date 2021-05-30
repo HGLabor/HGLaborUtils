@@ -11,9 +11,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class PlayerHider implements Listener {
     private final JavaPlugin plugin;
-    private final StaffPlayerSupplier supplier;
+    private final IStaffPlayerSupplier supplier;
 
-    public PlayerHider(StaffPlayerSupplier supplier, JavaPlugin plugin) {
+    public PlayerHider(IStaffPlayerSupplier supplier, JavaPlugin plugin) {
         this.supplier = supplier;
         this.plugin = plugin;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -23,12 +23,12 @@ public class PlayerHider implements Listener {
     private void onPlayerJoin(PlayerJoinEvent event) {
         //haha joint
         Player joined = event.getPlayer();
-        StaffPlayer staffPlayer = supplier.getStaffPlayer(joined);
+        IStaffPlayer staffPlayer = supplier.getStaffPlayer(joined);
         if (staffPlayer.canSeeStaffModePlayers()) {
             return;
         }
         for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
-            StaffPlayer otherStaffPlayer = supplier.getStaffPlayer(otherPlayer);
+            IStaffPlayer otherStaffPlayer = supplier.getStaffPlayer(otherPlayer);
             if (otherStaffPlayer.isStaffMode() && !otherStaffPlayer.isVisible()) {
                 joined.hidePlayer(plugin, otherPlayer);
             }
@@ -39,7 +39,7 @@ public class PlayerHider implements Listener {
         supplier.getStaffPlayer(playerToHide).setVisible(false);
         playerToHide.sendActionBar(Localization.INSTANCE.getMessage("staffmode.hidden", ChatUtils.locale(playerToHide)));
         for (Player player : Bukkit.getOnlinePlayers()) {
-            StaffPlayer staffPlayer = supplier.getStaffPlayer(player);
+            IStaffPlayer staffPlayer = supplier.getStaffPlayer(player);
             if (player.hasPermission("hglabor.staffmode")) {
                 if (staffPlayer.canSeeStaffModePlayers()) continue;
                 if (staffPlayer.isStaffMode()) continue;
@@ -58,7 +58,7 @@ public class PlayerHider implements Listener {
 
     public void hideEveryoneInStaffMode(Player player) {
         for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
-            StaffPlayer staffPlayer = supplier.getStaffPlayer(otherPlayer);
+            IStaffPlayer staffPlayer = supplier.getStaffPlayer(otherPlayer);
             if (staffPlayer.isStaffMode()) {
                 player.hidePlayer(plugin, otherPlayer);
             }
@@ -67,20 +67,20 @@ public class PlayerHider implements Listener {
 
     public void showEveryoneInStaffMode(Player player) {
         for (Player otherPlayer : Bukkit.getOnlinePlayers()) {
-            StaffPlayer staffPlayer = supplier.getStaffPlayer(otherPlayer);
+            IStaffPlayer staffPlayer = supplier.getStaffPlayer(otherPlayer);
             if (staffPlayer.isStaffMode()) {
                 player.showPlayer(plugin, otherPlayer);
             }
         }
     }
 
-    public StaffPlayerSupplier getSupplier() {
+    public IStaffPlayerSupplier getSupplier() {
         return supplier;
     }
 
     public void sendHideInformation() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            StaffPlayer staffPlayer = supplier.getStaffPlayer(player);
+            IStaffPlayer staffPlayer = supplier.getStaffPlayer(player);
             if (!staffPlayer.isStaffMode()) continue;
             if (staffPlayer.isVisible()) {
                 player.sendActionBar(Localization.INSTANCE.getMessage("staffmode.visible", ChatUtils.locale(player)));

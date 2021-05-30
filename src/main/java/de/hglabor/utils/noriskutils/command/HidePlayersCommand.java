@@ -2,7 +2,6 @@ package de.hglabor.utils.noriskutils.command;
 
 import de.hglabor.utils.noriskutils.staffmode.PlayerHider;
 import de.hglabor.utils.noriskutils.staffmode.StaffModeManager;
-import de.hglabor.utils.noriskutils.staffmode.StaffPlayer;
 import dev.jorel.commandapi.CommandAPICommand;
 import dev.jorel.commandapi.arguments.BooleanArgument;
 

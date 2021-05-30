@@ -2,7 +2,7 @@ package de.hglabor.utils.noriskutils.staffmode;
 
 import org.bukkit.entity.Player;
 
-public interface StaffPlayer {
+public interface IStaffPlayer {
     boolean isStaffMode();
 
     void toggleStaffMode();
@@ -12,6 +12,10 @@ public interface StaffPlayer {
     boolean isVisible();
 
     void setVisible(boolean visible);
+
+    boolean isBuildMode();
+
+    void setBuildMode(boolean value);
 
     void setCanSeeStaffModePlayers(boolean value);
 
