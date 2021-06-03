@@ -1,7 +1,9 @@
 package de.hglabor.utils.noriskutils;
 
 import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.context.DefaultContextKeys;
 import net.luckperms.api.model.group.Group;
+import net.luckperms.api.node.Node;
 import org.bukkit.entity.Player;
 
 import java.util.Comparator;
@@ -27,5 +29,29 @@ public final class LuckPermsUtils {
 
     public static String getGroupNameColor(Player player) {
         return getGroupNameColor(getPlayerGroup(player));
+    }
+
+    public static void addPermission(Player player, String permission) {
+        LuckPermsProvider.get().getUserManager().modifyUser(player.getUniqueId(), user -> user.data()
+                .add(Node.builder(permission).build()));
+    }
+
+    public static void removePermission(Player player, String permission) {
+        LuckPermsProvider.get().getUserManager().modifyUser(player.getUniqueId(), user -> user.data()
+                .remove(Node.builder(permission).build()));
+    }
+
+    public static void addPermission(Player player, String permission, String context) {
+        LuckPermsProvider.get().getUserManager().modifyUser(player.getUniqueId(), user -> user.data()
+                .add(Node.builder(permission)
+                        .withContext(DefaultContextKeys.SERVER_KEY, context)
+                        .build()));
+    }
+
+    public static void removePermission(Player player, String permission, String context) {
+        LuckPermsProvider.get().getUserManager().modifyUser(player.getUniqueId(), user -> user.data()
+                .remove(Node.builder(permission)
+                        .withContext(DefaultContextKeys.SERVER_KEY, context)
+                        .build()));
     }
 }
