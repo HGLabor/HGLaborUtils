@@ -14,12 +14,14 @@ public class HidePlayersCommand {
                 .executesPlayer((player, objects) -> {
                     boolean showPlayers = (boolean) objects[0];
                     PlayerHider playerHider = StaffModeManager.INSTANCE.getPlayerHider();
-                    playerHider.getSupplier().getStaffPlayer(player).setCanSeeStaffModePlayers(showPlayers);
-                    if (showPlayers) {
-                        playerHider.showEveryoneInStaffMode(player);
-                    } else {
-                        playerHider.hideEveryoneInStaffMode(player);
-                    }
+                    playerHider.getSupplier().getStaffPlayer(player).ifPresent(iStaffPlayer -> {
+                        iStaffPlayer.setCanSeeStaffModePlayers(showPlayers);
+                        if (showPlayers) {
+                            playerHider.showEveryoneInStaffMode(player);
+                        } else {
+                            playerHider.hideEveryoneInStaffMode(player);
+                        }
+                    });
                 })
                 .register();
     }

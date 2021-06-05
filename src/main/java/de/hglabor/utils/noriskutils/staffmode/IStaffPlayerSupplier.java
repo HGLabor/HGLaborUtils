@@ -2,8 +2,10 @@ package de.hglabor.utils.noriskutils.staffmode;
 
 import org.bukkit.entity.Player;
 
-public interface IStaffPlayerSupplier {
-    IStaffPlayer getStaffPlayer(Player player);
+import java.util.Optional;
 
-    Player getRandomActivePlayer();
+public interface IStaffPlayerSupplier {
+    Optional<IStaffPlayer> getStaffPlayer(Player player);
+
+    Optional<Player> getRandomActivePlayer();
 }
