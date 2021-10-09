@@ -9,7 +9,7 @@ allprojects {
 }
 
 group 'de.hglabor'
-version '0.0.13'
+version '0.0.15'
 description "Utils for HGLabor Network"
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
 
@@ -20,6 +20,7 @@ repositories {
     maven { url 'http://maven.enginehub.org/repo/' }
     maven { url 'http://repo.md-5.net/content/groups/public/' }
     maven { url "https://jitpack.io/" }
+    maven { url "https://repo.pl3x.net/" }
     // COMMAND API
     maven { url = "https://raw.githubusercontent.com/JorelAli/CommandAPI/mvn-repo/" }
     maven { url = "https://repo.codemc.org/repository/maven-public/" }
@@ -78,7 +79,7 @@ uploadArchives {
 }
 
 dependencies {
-    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly "net.pl3x.purpur:purpur-api:1.16.5-R0.1-SNAPSHOT"
     compileOnly 'org.bukkit:craftbukkit:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'dev.jorel:commandapi-shade:5.8'
     compileOnly 'com.github.dmulloy2:ProtocolLib:master-SNAPSHOT'
@@ -87,6 +88,7 @@ dependencies {
     compileOnly 'LibsDisguises:LibsDisguises:10.0.21'
     compileOnly 'net.luckperms:api:5.3'
     compileOnly 'redis.clients:jedis:3.5.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
 tasks.withType(JavaCompile) {
@@ -109,5 +111,25 @@ artifacts {
 
 signing {
     sign configurations.archives
+}
+buildscript {
+    ext.kotlin_version = '1.5.30'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+apply plugin: 'kotlin'
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
