@@ -15,12 +15,11 @@ class MultiLineBuilder {
 }
 
 class KBoard(val player: Player, title: String) {
-    private val objective: Objective
+    val scoreboard = Bukkit.getScoreboardManager().newScoreboard
+    val objective = scoreboard.registerNewObjective("aaa", "bbb", title)
     var currentLines = mutableListOf<String>()
 
     init {
-        val scoreboard = Bukkit.getScoreboardManager().newScoreboard
-        objective = scoreboard.registerNewObjective("aaa", "bbb", title)
         objective.displaySlot = DisplaySlot.SIDEBAR
         player.scoreboard = scoreboard
     }
