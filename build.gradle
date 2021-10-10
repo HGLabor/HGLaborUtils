@@ -85,7 +85,7 @@ dependencies {
     compileOnly 'com.github.dmulloy2:ProtocolLib:master-SNAPSHOT'
     compileOnly 'com.intellectualsites.fawe:FAWE-Bukkit:1.16-583'
     compileOnly 'de.hglabor:localization:0.0.6'
-    compileOnly 'LibsDisguises:LibsDisguises:10.0.21'
+    compileOnly 'LibsDisguises:LibsDisguises:10.0.26'
     compileOnly 'net.luckperms:api:5.3'
     compileOnly 'redis.clients:jedis:3.5.1'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
