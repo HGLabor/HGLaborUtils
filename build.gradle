@@ -88,6 +88,7 @@ dependencies {
     compileOnly 'LibsDisguises:LibsDisguises:10.0.26'
     compileOnly 'net.luckperms:api:5.3'
     compileOnly 'redis.clients:jedis:3.5.1'
+    compileOnly 'net.axay:kspigot:1.16.29'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 }
 
