@@ -1,0 +1,2 @@
+rootProject.name = "hglabor-utils"
+
