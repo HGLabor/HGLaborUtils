@@ -2,45 +2,57 @@ package de.hglabor.utils.noriskutils.scoreboard.board
 
 import org.bukkit.entity.Player
 
-class BoardBuilder(val kBoard: Board) {
+
+class BoardBuilder(val board: Board) {
+    var lineBuilder = LineBuilder()
+
     var title: String
         set(value) {
-            kBoard.title = value
-            kBoard.objective.displayName = value
+            board.title = value
+            board.objective.displayName = value
         }
-        get() = kBoard.title
-    var lineBuilder = LineBuilder()
+        get() = board.title
+
+    var period: Long
+        set(value) {
+            board.updatingPeriod = value
+        }
+        get() = board.updatingPeriod
 
     inline fun content(crossinline callback: LineBuilder.() -> Unit) {
         lineBuilder = LineBuilder().apply(callback)
     }
 
+    fun addFlag(boardFlag: BoardFlag) {
+        board.addFlag(boardFlag)
+    }
+
     fun invoke(reverse: Boolean) {
         if (reverse) reverseLines()
-        lineBuilder.lines.forEach { kBoard.addLine(it) }
+        board.lines.forEach { it.register() }
     }
 
     private fun reverseLines() {
-        lineBuilder.lines.forEach {
-            it.index = lineBuilder.lines.size - it.index
-        }
+        board.lines.reverse()
     }
 
     inner class LineBuilder {
-        val lines = mutableListOf<Board.ScoreboardLine>()
-
         operator fun String.unaryPlus() {
-            lines += kBoard.StaticLine(-1, this)
+            board.lines += board.BoardLine(this)
         }
 
         operator fun (() -> String).unaryPlus() {
-            lines += kBoard.DynamicLine(-1, this)
+            board.lines += board.BoardLine(this)
         }
     }
 }
 
 inline fun Player.setScoreboard(updatingPeriod: Long = 20, bottomToTop: Boolean = true, crossinline builder: BoardBuilder.() -> Unit): Board {
-    return Board(this, updatingPeriod).apply {
+    return Board(updatingPeriod).apply {
         BoardBuilder(this).apply(builder).invoke(bottomToTop)
-    }.setScoreboard()
+    }.setScoreboard(this)
+}
+
+fun Player.setScoreboard(board: Board) {
+    board.setScoreboard(this)
 }
