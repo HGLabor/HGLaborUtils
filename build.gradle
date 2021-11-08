@@ -9,7 +9,7 @@ allprojects {
 }
 
 group 'de.hglabor'
-version '0.0.17'
+version '0.0.18'
 description "Utils for HGLabor Network"
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_11
 
