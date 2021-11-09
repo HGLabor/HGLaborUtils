@@ -13,6 +13,10 @@ import org.bukkit.scoreboard.Team
 class Board(var updatingPeriod: Long = 20L) {
     val lines = mutableListOf<BoardLine>()
     var title = ""
+        set(value) {
+            field = value
+            objective.displayName = value
+        }
     val scoreboard = Bukkit.getScoreboardManager().newScoreboard
     val objective: Objective = scoreboard.registerNewObjective("aaa", "bbb", title)
     var runnable: KSpigotRunnable? = null
@@ -90,6 +94,10 @@ class Board(var updatingPeriod: Long = 20L) {
 
     fun deleteLine(line: Int) {
         deleteLine(lines[line])
+    }
+
+    fun clear() {
+        lines.forEach { it.unregister() }
     }
 
     fun addFlag(boardFlag: BoardFlag) {
