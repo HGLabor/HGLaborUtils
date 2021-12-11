@@ -129,6 +129,14 @@ public class Feast implements Listener {
         Arrays.stream(chestLocations).forEach(chestLocation -> chestLocation.getBlock().setType(Material.CHEST));
 
         //FEAST ITEMS
+        RandomCollection<ItemStack> ironItems = new RandomCollection<>();
+        ironItems.add(1, new ItemStack(Material.IRON_HELMET));
+        ironItems.add(1, new ItemStack(Material.IRON_CHESTPLATE));
+        ironItems.add(1, new ItemStack(Material.IRON_LEGGINGS));
+        ironItems.add(1, new ItemStack(Material.IRON_BOOTS));
+        ironItems.add(1, new ItemStack(Material.IRON_SWORD));
+        ironItems.add(1, new ItemStack(Material.IRON_PICKAXE));
+
         RandomCollection<ItemStack> diamondItems = new RandomCollection<>();
         diamondItems.add(1, new ItemStack(Material.DIAMOND_HELMET));
         diamondItems.add(1, new ItemStack(Material.DIAMOND_CHESTPLATE));
@@ -167,10 +175,11 @@ public class Feast implements Listener {
         singleItems.add(0.2, strengthPotion);
 
         RandomCollection<RandomCollection<ItemStack>> lootPool = new RandomCollection<>();
-        lootPool.add(20, diamondItems);
+        lootPool.add(17.5, ironItems);
+        lootPool.add(6.8, diamondItems);
         lootPool.add(33, sizeableItems);
         lootPool.add(33, singleItems);
-        lootPool.add(3, netheriteItems);
+        lootPool.add(1.5, netheriteItems);
 
 
         for (Location chestLocation : chestLocations) {
