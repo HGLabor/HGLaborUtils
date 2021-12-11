@@ -1,7 +1,7 @@
 package de.hglabor.utils.noriskutils
 
 import de.hglabor.utils.noriskutils.data.SimpleLoc
-import net.minecraft.server.v1_16_R3.NBTCompressedStreamTools
+import net.minecraft.nbt.NBTCompressedStreamTools
 import org.bukkit.Material
 import java.io.InputStream
 
@@ -10,14 +10,15 @@ object SchematicReader {
         val map = mutableMapOf<SimpleLoc, Material>()
 
         val nbt = NBTCompressedStreamTools.a(inputStream)
-        val width = nbt.getShort("Width")
-        val height = nbt.getShort("Height")
-        val length = nbt.getShort("Length")
-        val blocks = nbt.getByteArray("BlockData")
-        val palette = nbt.getCompound("Palette")
+        val width = nbt.g("Width")
+        val height = nbt.g("Height")
+        val length = nbt.g("Length")
+        val blocks = nbt.m("BlockData")
+        val palette = nbt.p("Palette")
 
         val blockPalette = mutableMapOf<Int, String>()
-        palette.keys.forEach { blockPalette[palette.getInt(it)] = it }
+        //TODO 1.18.1 not sure if d() and p() is correct
+        palette.d().forEach { blockPalette[palette.h(it)] = it }
 
         for (i in blocks.indices) {
             val block = blocks[i]

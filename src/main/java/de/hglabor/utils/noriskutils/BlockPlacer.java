@@ -1,11 +1,13 @@
 package de.hglabor.utils.noriskutils;
 
-import net.minecraft.server.v1_16_R3.Block;
-import net.minecraft.server.v1_16_R3.BlockPosition;
-import net.minecraft.server.v1_16_R3.ChunkSection;
+import net.minecraft.core.BlockPosition;
+import net.minecraft.server.level.WorldServer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.chunk.Chunk;
+import net.minecraft.world.level.chunk.ChunkSection;
 import org.bukkit.World;
-import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_16_R3.util.CraftMagicNumbers;
+import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R1.util.CraftMagicNumbers;
 
 public final class BlockPlacer {
     /**
@@ -17,10 +19,10 @@ public final class BlockPlacer {
      * which use extensive resource.
      */
     public static void setBlockInNativeWorld(World world, int x, int y, int z, org.bukkit.Material material, boolean applyPhysics) {
-        net.minecraft.server.v1_16_R3.World nmsWorld = ((CraftWorld) world).getHandle();
+        WorldServer nmsWorld = ((CraftWorld) world).getHandle();
         BlockPosition bp = new BlockPosition(x, y, z);
         Block block = CraftMagicNumbers.getBlock(material);
-        nmsWorld.setTypeAndData(bp, block.getBlockData(), applyPhysics ? 3 : 2);
+        nmsWorld.a(bp, block.n(), applyPhysics ? 3 : 2);
     }
 
     /**
@@ -36,57 +38,12 @@ public final class BlockPlacer {
      */
     public static void setBlockInNativeChunk(World world, int x, int y, int z, org.bukkit.Material material, boolean applyPhysics) {
         try {
-            net.minecraft.server.v1_16_R3.World nmsWorld = ((CraftWorld) world).getHandle();
-            net.minecraft.server.v1_16_R3.Chunk nmsChunk = nmsWorld.getChunkAt(x >> 4, z >> 4);
+            WorldServer nmsWorld = ((CraftWorld) world).getHandle();
+            Chunk nmsChunk = nmsWorld.getChunkIfLoaded(x >> 4, z >> 4);
             BlockPosition bp = new BlockPosition(x, y, z);
             Block block = CraftMagicNumbers.getBlock(material);
-            nmsChunk.setType(bp, block.getBlockData(), applyPhysics);
+            nmsChunk.a(bp, block.n(), applyPhysics);
         } catch (Exception ignore) {
         }
-    }
-
-    /**
-     * 7.9M blocks per second (+13166%)
-     * <p>
-     * This method has all cons that method #2 has.
-     * Sometimes it produces unstable results (e.g. lose some blocks). Still finding reason.
-     * <p>
-     * Use for fun.
-     */
-    public static void setBlockInNativeChunkSection(World world, int x, int y, int z, org.bukkit.Material material) {
-        net.minecraft.server.v1_16_R3.World nmsWorld = ((CraftWorld) world).getHandle();
-        net.minecraft.server.v1_16_R3.Chunk nmsChunk = nmsWorld.getChunkAt(x >> 4, z >> 4);
-        Block block = CraftMagicNumbers.getBlock(material);
-
-        ChunkSection cs = nmsChunk.getSections()[y >> 4];
-        if (cs == nmsChunk.a()) {
-            cs = new ChunkSection(y >> 4 << 4);
-            nmsChunk.getSections()[y >> 4] = cs;
-        }
-        cs.setType(x & 15, y & 15, z & 15, block.getBlockData());
-    }
-
-    /**
-     * 13.8M-14M blocks per second (+23333%)
-     * <p>
-     * This method directly changes block data in DataPalette, the instance that Minecraft uses to store block data in byte. It has all the cons that #2 and #3 has and since Chunks are loaded from DataPalette, this method would not change Chunks in memory unless you reload the chunk (e.g. by restarting server.)
-     * <p>
-     * Maybe useful for massive minigame map pregeneration.
-     */
-    public static void setBlockInNativeDataPalette(World world, int x, int y, int z, org.bukkit.Material material, boolean applyPhysics) {
-        net.minecraft.server.v1_16_R3.World nmsWorld = ((CraftWorld) world).getHandle();
-        net.minecraft.server.v1_16_R3.Chunk nmsChunk = nmsWorld.getChunkAt(x >> 4, z >> 4);
-        Block block = CraftMagicNumbers.getBlock(material);
-
-        ChunkSection cs = nmsChunk.getSections()[y >> 4];
-        if (cs == nmsChunk.a()) {
-            cs = new ChunkSection(y >> 4 << 4);
-            nmsChunk.getSections()[y >> 4] = cs;
-        }
-
-        if (applyPhysics)
-            cs.getBlocks().setBlock(x & 15, y & 15, z & 15, block.getBlockData());
-        else
-            cs.getBlocks().b(x & 15, y & 15, z & 15, block.getBlockData());
     }
 }

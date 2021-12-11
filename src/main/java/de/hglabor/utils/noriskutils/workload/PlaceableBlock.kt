@@ -20,8 +20,6 @@ data class PlaceableBlock(
             "vanilla" -> world?.getBlockAt(x, y, z)?.type = type //38s
             "setBlockInNativeWorld" -> BlockPlacer.setBlockInNativeWorld(world, x, y, z, type, true) //31s
             "setBlockInNativeChunk" -> BlockPlacer.setBlockInNativeChunk(world, x, y, z, type, true) //fast af but needs relog
-            "setBlockInNativeChunkSection" -> BlockPlacer.setBlockInNativeChunkSection(world, x, y, z, type)
-            "setBlockInNativeDataPalette" -> BlockPlacer.setBlockInNativeDataPalette(world, x, y, z, type, true)
         }
     }
 

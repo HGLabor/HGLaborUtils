@@ -1,16 +1,22 @@
 package de.hglabor.utils.noriskutils.pvpbots;
 
+
 import de.hglabor.utils.noriskutils.NMSUtils;
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.PlayerDisguise;
-import net.minecraft.server.v1_16_R3.*;
+import net.minecraft.network.chat.ChatComponentText;
+import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.world.entity.ai.goal.PathfinderGoal;
+import net.minecraft.world.entity.monster.EntityZombie;
+import net.minecraft.world.entity.player.EntityHuman;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.EquipmentSlot;
@@ -20,6 +26,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.EnumSet;
 
+/*
 public class PvPBot extends EntityZombie {
     public final static String META_DATA = "pvpBot";
     private final String name;
@@ -35,7 +42,7 @@ public class PvPBot extends EntityZombie {
     public PvPBot(World world, String name, JavaPlugin plugin) {
         super(((CraftWorld) world).getHandle());
         this.name = name;
-        this.getWorld().addEntity(this);
+        this.t.addFreshEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM);
         this.getEntity().setMetadata(META_DATA, new FixedMetadataValue(plugin, ""));
         this.getEntity().setShouldBurnInDay(false);
         this.getEntity().setRemoveWhenFarAway(false);
@@ -84,9 +91,6 @@ public class PvPBot extends EntityZombie {
         this.setPosition(location.getX(), location.getY(), location.getZ());
     }
 
-    /**
-     * @param range will be hoch 2 genommen
-     */
     public PvPBot withRange(double range) {
         this.attackRange = range * range;
         return this;
@@ -334,4 +338,4 @@ public class PvPBot extends EntityZombie {
             return false;
         }
     }
-}
+} */
