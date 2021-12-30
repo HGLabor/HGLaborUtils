@@ -2,15 +2,18 @@ package de.hglabor.utils.noriskutils.pvpbots;
 
 
 import de.hglabor.utils.noriskutils.NMSUtils;
+import de.hglabor.utils.noriskutils.pvpbots.goal.PvPBotMeleeAttackGoal;
 import me.libraryaddict.disguise.DisguiseAPI;
 import me.libraryaddict.disguise.disguisetypes.PlayerDisguise;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityLiving;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.goal.PathfinderGoal;
-import net.minecraft.world.entity.player.EntityHuman;
+import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
@@ -24,8 +27,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.EnumSet;
 
 
 public class PvPBot extends net.minecraft.world.entity.monster.Zombie {
@@ -71,11 +72,6 @@ public class PvPBot extends net.minecraft.world.entity.monster.Zombie {
     this.playerDisguise.setNameVisible(true);
     DisguiseAPI.disguiseEntity(this.getBukkitEntity(), playerDisguise);
     this.setGoalTarget(target, EntityTargetEvent.TargetReason.CLOSEST_PLAYER, true);
-  }
-
-  @Override
-  public void die(DamageSource damagesource) {
-    super.die(damagesource);
   }
 
   @Override
@@ -141,22 +137,29 @@ public class PvPBot extends net.minecraft.world.entity.monster.Zombie {
   }
 
   protected void initPathfinder() {
-    this.goalSelector.addGoal(0, new PathfinderGoalMeleeAttack(1));
+    this.goalSelector.addGoal(0, new PvPBotMeleeAttackGoal(this, 1, false));
     if (isDefaultPathfinderTarget) {
-      this.goalSelector.addGoal(5, new PathfinderGoalNearestAttackableTarget<>(this, EntityHuman.class, true));
+      this.goalSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, net.minecraft.world.entity.player.Player.class, true));
     } else {
       this.goalSelector.addGoal(1, new PathfinderFindTarget());
     }
-    this.goalSelector.addGoal(2, new PathfinderGoalFloat(this));  //Jumps out of water
+    this.goalSelector.addGoal(2, new FloatGoal(this));  //Jumps out of water
   }
 
   @Override
-  protected boolean isDropExperience() {
+  protected boolean shouldDropExperience() {
     return false;
   }
 
-  protected SoundEffect getSoundHurt(DamageSource damagesource) {
-    return damagesource == DamageSource.BURN ? SoundEffects.ENTITY_PLAYER_HURT_ON_FIRE : (damagesource == DamageSource.DROWN ? SoundEffects.ENTITY_PLAYER_HURT_DROWN : (damagesource == DamageSource.SWEET_BERRY_BUSH ? SoundEffects.ENTITY_PLAYER_HURT_SWEET_BERRY_BUSH : SoundEffects.ENTITY_PLAYER_HURT));
+
+  @Override
+  protected SoundEvent getHurtSound(DamageSource source) {
+    return source == DamageSource.ON_FIRE ? SoundEvents.PLAYER_HURT_ON_FIRE : (source == DamageSource.DROWN ? SoundEvents.PLAYER_HURT_DROWN : (source == DamageSource.SWEET_BERRY_BUSH ? SoundEvents.PLAYER_HURT_SWEET_BERRY_BUSH : (source == DamageSource.FREEZE ? SoundEvents.PLAYER_HURT_FREEZE : SoundEvents.PLAYER_HURT)));
+  }
+
+  @Override
+  public SoundEvent getDeathSound() {
+    return SoundEvents.PLAYER_DEATH;
   }
 
   public Zombie getEntity() {
@@ -164,151 +167,33 @@ public class PvPBot extends net.minecraft.world.entity.monster.Zombie {
   }
 
   @Override
-  protected SoundEffect getSoundDeath() {
-    return SoundEffects.ENTITY_PLAYER_DEATH;
+  protected SoundEvent getStepSound() {
+    return SoundEvents.GRASS_STEP;
   }
 
   @Override
-  protected SoundEffect getSoundStep() {
-    return SoundEffects.BLOCK_GRASS_STEP;
-  }
-
-  @Override
-  protected SoundEffect getSoundAmbient() {
+  protected SoundEvent getAmbientSound() {
     return null;
   }
 
-  protected SoundEffect getSoundFall(int i) {
-    return i > 4 ? SoundEffects.ENTITY_PLAYER_BIG_FALL : SoundEffects.ENTITY_PLAYER_SMALL_FALL;
+  @Override
+  protected SoundEvent getSwimSound() {
+    return SoundEvents.PLAYER_SWIM;
   }
 
-  protected SoundEffect getSoundSwim() {
-    return SoundEffects.ENTITY_PLAYER_SWIM;
+  @Override
+  protected SoundEvent getSwimSplashSound() {
+    return SoundEvents.PLAYER_SPLASH;
   }
 
-  protected SoundEffect getSoundSplash() {
-    return SoundEffects.ENTITY_PLAYER_SPLASH;
+  @Override
+  protected SoundEvent getSwimHighSpeedSplashSound() {
+    return SoundEvents.PLAYER_SPLASH_HIGH_SPEED;
   }
 
-  protected SoundEffect getSoundSplashHighSpeed() {
-    return SoundEffects.ENTITY_PLAYER_SPLASH_HIGH_SPEED;
-  }
-
-  public SoundCategory getSoundCategory() {
-    return SoundCategory.PLAYERS;
-  }
-
-  private class PathfinderGoalMeleeAttack extends PathfinderGoal {
-    private final double b; // dont know what this does
-    private final boolean c; // dont know what this does
-    private PathEntity pathEntity;
-    private double e;
-    private double f;
-    private double g;
-    private int h;
-    private int attackCooldown;
-    private long k;
-
-    public PathfinderGoalMeleeAttack(double var1) {
-      this.b = var1;
-      this.c = true;
-      this.a(EnumSet.of(Type.MOVE, Type.LOOK));
-    }
-
-    public boolean a() {
-      long var0 = PvPBot.this.world.getTime();
-      if (var0 - this.k < 20L) {
-        return false;
-      } else {
-        this.k = var0;
-        EntityLiving var2 = PvPBot.this.getGoalTarget();
-        if (var2 == null) {
-          return false;
-        } else if (!var2.isAlive()) {
-          return false;
-        } else {
-          this.pathEntity = PvPBot.this.getNavigation().a(var2, 0);
-          if (this.pathEntity != null) {
-            return true;
-          } else {
-            return this.attackEntity(var2) >= PvPBot.this.h(var2.locX(), var2.locY(), var2.locZ());
-          }
-        }
-      }
-    }
-
-    public boolean b() {
-      EntityLiving var0 = PvPBot.this.getGoalTarget();
-      if (var0 == null) {
-        return false;
-      } else if (!var0.isAlive()) {
-        return false;
-      } else if (!this.c) {
-        return !PvPBot.this.getNavigation().m();
-      } else if (!PvPBot.this.a(var0.getChunkCoordinates())) {
-        return false;
-      } else {
-        return !(var0 instanceof EntityHuman) || !var0.isSpectator() && !((EntityHuman) var0).isCreative();
-      }
-    }
-
-    public void c() {
-      PvPBot.this.getNavigation().a(this.pathEntity, this.b);
-      PvPBot.this.setAggressive(true);
-      this.h = 0;
-      this.attackCooldown = 0;
-    }
-
-    public void d() {
-      EntityLiving var0 = PvPBot.this.getGoalTarget();
-      if (!IEntitySelector.e.test(var0)) {
-        PvPBot.this.setGoalTarget(null);
-      }
-
-      PvPBot.this.setAggressive(false);
-      PvPBot.this.getNavigation().o();
-    }
-
-    public void e() {
-      EntityLiving target = PvPBot.this.getGoalTarget();
-      PvPBot.this.getControllerLook().a(target, 30.0F, 30.0F);
-      double distanceToTarget = PvPBot.this.h(target.locX(), target.locY(), target.locZ());
-      this.h = Math.max(this.h - 1, 0);
-      if ((this.c || PvPBot.this.getEntitySenses().a(target)) && this.h <= 0 && (this.e == 0.0D && this.f == 0.0D && this.g == 0.0D || target.h(this.e, this.f, this.g) >= 1.0D || PvPBot.this.getRandom().nextFloat() < 0.05F)) {
-        this.e = target.locX();
-        this.f = target.locY();
-        this.g = target.locZ();
-        this.h = 4 + PvPBot.this.getRandom().nextInt(7);
-        if (distanceToTarget > 1024.0D) {
-          this.h += 10;
-        } else if (distanceToTarget > 256.0D) {
-          this.h += 5;
-        }
-
-        if (!PvPBot.this.getNavigation().a(target, this.b)) {
-          this.h += 15;
-        }
-      }
-
-      this.attackCooldown = Math.max(this.attackCooldown - 1, 0);
-      this.attackEntity(target, distanceToTarget);
-    }
-
-    protected void attackEntity(EntityLiving target, double distanceToTarget) {
-      if (distanceToTarget <= attackRange && this.attackCooldown <= 0) {
-        this.resetAttackCooldown();
-        PvPBot.this.swingHand(EnumHand.MAIN_HAND);
-        PvPBot.this.attackEntity(target);
-      }
-    }
-
-    protected void resetAttackCooldown() {
-      this.attackCooldown = 0;
-    }
-
-    protected double attackEntity(EntityLiving var0) {
-      return PvPBot.this.getWidth() * 2.0F * PvPBot.this.getWidth() * 2.0F + var0.getWidth();
-    }
+  @Override
+  protected SoundEvent getFallDamageSound(int distance) {
+    return distance > 4 ? SoundEvents.PLAYER_BIG_FALL : SoundEvents.PLAYER_SMALL_FALL;
   }
 
   private class PathfinderFindTarget extends Goal {

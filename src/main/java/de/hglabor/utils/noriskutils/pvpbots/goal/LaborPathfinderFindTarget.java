@@ -1,4 +1,4 @@
-package de.hglabor.utils.noriskutils.pvpbots.nms;
+package de.hglabor.utils.noriskutils.pvpbots.goal;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
