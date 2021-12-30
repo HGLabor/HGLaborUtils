@@ -1,52 +1,78 @@
-plugins {
-    kotlin("jvm") version "1.6.0"
-    `maven-publish`
-}
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+val repo = "hglabor/hilfreich"
+val javaVersion = "16"
+val mcVersion = "1.17.1"
 
 group = "de.hglabor"
-version = "1.18.1-v1"
+version = "${mcVersion}_v1"
+description = "utils for hglabor"
+
+java.targetCompatibility = JavaVersion.valueOf("VERSION_${javaVersion.replace(".", "_")}")
+java.sourceCompatibility = JavaVersion.VERSION_16
+
+plugins {
+  kotlin("jvm") version "1.6.10"
+
+  `java-library`
+  `maven-publish`
+  signing
+
+  kotlin("plugin.serialization") version "1.6.0"
+  id("io.papermc.paperweight.userdev") version "1.2.0"
+}
 
 repositories {
-    mavenCentral()
-    mavenLocal()
-    maven("https://papermc.io/repo/repository/maven-public")
-    maven("https://maven.enginehub.org/repo/")
-    maven("https://repo.md-5.net/content/groups/public/")
-    maven("https://jitpack.io")
-    maven("https://repo.pl3x.net/")
-    maven("https://raw.githubusercontent.com/JorelAli/CommandAPI/mvn-repo/") // COMMAND API
-    maven("https://repo.codemc.org/repository/maven-public/")
-    maven("https://mvn.intellectualsites.com/content/repositories/releases/") // FAWE
+  mavenCentral()
+  mavenLocal()
+  maven("https://papermc.io/repo/repository/maven-public/")
+  maven("https://oss.sonatype.org/content/groups/public/")
+  maven("https://maven.enginehub.org/repo/")
+  maven("https://repo.md-5.net/content/groups/public/")
+  maven("https://repo.maven.apache.org/maven2/")
+  maven("https://jitpack.io/")
 }
 
 dependencies {
-    // paper
-    compileOnly("io.papermc.paper:paper-api:1.18.1-R0.1-SNAPSHOT")
-    // nms -> use BuildTools
-    compileOnly("org.bukkit:craftbukkit:1.18.1-R0.1-SNAPSHOT")
-    compileOnly("dev.jorel:commandapi-shade:5.8")
-    compileOnly("com.github.dmulloy2:ProtocolLib:master-SNAPSHOT")
-    compileOnly("com.intellectualsites.fawe:FAWE-Bukkit:1.16-583")
-    compileOnly("de.hglabor:localization:0.0.7")
-    compileOnly("LibsDisguises:LibsDisguises:10.0.26")
-    compileOnly("net.luckperms:api:5.3")
-    compileOnly("redis.clients:jedis:3.6.3")
-    compileOnly("net.axay:kspigot:1.17.4")
+  paperDevBundle("$mcVersion-R0.1-SNAPSHOT")
+  compileOnly("io.papermc.paper:paper-api:$mcVersion-R0.1-SNAPSHOT")
+  compileOnly("net.axay:kspigot:1.17.4")
+  compileOnly("org.apache.commons:commons-lang3:3.12.0")
+  compileOnly("LibsDisguises:LibsDisguises:10.0.23")
+  compileOnly("de.hglabor:localization:0.0.7")
+  compileOnly("de.hglabor:hglabor-utils:0.0.17")
+  compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.2.0-SNAPSHOT")
+}
+
+tasks {
+  build {
+    dependsOn(reobfJar)
+  }
+  withType<JavaCompile> {
+    options.encoding = "UTF-8"
+    val version = if (javaVersion.contains(".")) {
+      javaVersion.split(".")[1].toInt()
+    } else {
+      javaVersion.toInt()
+    }
+    options.release.set(version)
+  }
+  withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = javaVersion
+  }
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+  withSourcesJar()
+  withJavadocJar()
 }
 
 publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            groupId = group as String?
-            artifactId = "hglabor-utils"
-            version = version
-            from(components["java"])
-        }
+  publications {
+    create<MavenPublication>("maven") {
+      from(components["java"])
     }
+  }
 }
 
 

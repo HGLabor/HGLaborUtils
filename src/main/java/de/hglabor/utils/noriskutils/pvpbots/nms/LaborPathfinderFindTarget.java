@@ -1,95 +1,74 @@
 package de.hglabor.utils.noriskutils.pvpbots.nms;
 
-/*import net.minecraft.server.level.EntityPlayer;
-import net.minecraft.world.entity.EntityInsentient;
-import net.minecraft.world.entity.EntityLiving;
-import net.minecraft.world.entity.ai.goal.PathfinderGoal;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.player.Player;
 import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityTargetEvent;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
-public class LaborPathfinderFindTarget extends PathfinderGoal {
-    public EntityInsentient mob;
-    public UUID safe;
-    public boolean attack;
+public class LaborPathfinderFindTarget extends Goal {
+  public Mob mob;
+  public UUID safe;
+  public boolean attack;
 
-    public LaborPathfinderFindTarget(EntityInsentient mob, UUID safe) {
-        this.mob = mob;
-        this.safe = safe;
+  public LaborPathfinderFindTarget(Mob mob, UUID safe, boolean attack) {
+    this.mob = mob;
+    this.safe = safe;
+    this.attack = attack;
+  }
+
+  @Override
+  public boolean canUse() {
+    LivingEntity mobTarget = mob.getTarget();
+    if (mobTarget == null) {
+      mob.setTarget(null);
+      return false;
+    }
+    Entity target = mobTarget.getBukkitEntity();
+
+    if (!(((CraftLivingEntity) target).getHandle() instanceof Player)) {
+      mob.setTarget(null);
+      return false;
     }
 
-    @Override
-    public boolean a() {
-
-        Map<Double, EntityLiving> p = new HashMap<>();
-        double least = 100D;
-
-        for (Entity ent : mob.getBukkitEntity().getNearbyEntities(10, 10, 10)) {
-            if (ent instanceof Player) {
-                Player target = (Player) ent;
-                // Checks
-                if (target.getGameMode() == GameMode.CREATIVE || !mob.getEntitySenses().a(((CraftPlayer) target).getHandle())) {
-                    continue;
-                }
-                p.put(ent.getLocation().distance(mob.getBukkitEntity().getLocation()), ((CraftPlayer) ent).getHandle());
-            }
-        }
-
-        for (Double d : p.keySet()) {
-            if (d < least) {
-                least = d;
-            }
-        }
-
-        EntityLiving target = p.get(least);
-
-        if (target == null) {
-            mob.setGoalTarget(null, EntityTargetEvent.TargetReason.CUSTOM, true);
-            return false;
-        }
-
-
-        if (!(target instanceof EntityPlayer)) {
-            mob.setGoalTarget(null, EntityTargetEvent.TargetReason.CUSTOM, true);
-            return false;
-        }
-
-        mob.setGoalTarget(target, EntityTargetEvent.TargetReason.CUSTOM, true);
-        return true;
+    if (target.getUniqueId().equals(safe)) {
+      mob.setTarget(null);
+      return false;
     }
 
-    @Override
-    public void e() {
-        if (mob.getGoalTarget() == null) {
-            return;
-        }
+    mob.setGoalTarget(((CraftPlayer) target).getHandle(), EntityTargetEvent.TargetReason.CUSTOM, true);
+    return true;
+  }
 
-        mob.getNavigation().a(mob.getGoalTarget().getBukkitEntity().getLocation().getX(),
-                mob.getGoalTarget().getBukkitEntity().getLocation().getY() + 1.0D,
-                mob.getGoalTarget().getBukkitEntity().getLocation().getZ(), 1.5F);
-
-        if (mob.getBukkitEntity().getLocation().distance(mob.getGoalTarget().getBukkitEntity().getLocation()) <= 1.5D) {
-            if (mob.getEntitySenses().a(mob.getGoalTarget())) { // canSee method
-                if (safe != null) {
-                    ((LivingEntity) mob.getGoalTarget().getBukkitEntity()).damage(4.0D, Bukkit.getPlayer(safe));
-                } else {
-                    ((LivingEntity) mob.getGoalTarget().getBukkitEntity()).damage(4.0D, mob.getBukkitEntity());
-                }
-            }
-        }
+  @Override
+  public void start() {
+    if (mob.getTarget() == null) {
+      return;
     }
 
-    @Override
-    public boolean b() {
-        return false;
+    Location location = mob.getTarget().getBukkitEntity().getLocation();
+    mob.getNavigation().moveTo(location.getX(), location.getY() + 1.0D, location.getZ(), 1.5F);
+
+    if (!attack) { // We want the entity to not attack but able to move from the method above.
+      return;
     }
+
+    if (mob.getBukkitEntity().getLocation().distance(mob.getTarget().getBukkitEntity().getLocation()) <= 1.5D) {
+      if (mob.getSensing().hasLineOfSight(mob.getTarget())) { // canSee method
+        ((org.bukkit.entity.LivingEntity) mob.getTarget().getBukkitEntity()).damage(4.0D, Bukkit.getPlayer(safe));
+      }
+    }
+  }
+
+  @Override
+  public boolean isInterruptable() {
+    return false;
+  }
 }
-*/
