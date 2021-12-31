@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val repo = "hglabor/hilfreich"
+val repo = "HGLabor/HGLaborUtils"
 val javaVersion = "16"
 val mcVersion = "1.17.1"
 
@@ -69,12 +69,56 @@ java {
   withJavadocJar()
 }
 
+signing {
+  sign(publishing.publications)
+}
+
 publishing {
+  repositories {
+    maven("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+      name = "ossrh"
+      credentials(PasswordCredentials::class) {
+        username = property("ossrhUsername") as String
+        password = property("ossrhPassword") as String
+      }
+    }
+  }
+
   publications {
-    create<MavenPublication>("maven") {
-      from(components["java"])
+    create<MavenPublication>(project.name) {
+      artifact(tasks.reobfJar)
+      artifact(tasks.named("javadocJar"))
+      artifact(tasks.named("sourcesJar"))
+
+      this.groupId = project.group.toString()
+      this.artifactId = project.name.toLowerCase()
+      this.version = project.version.toString()
+
+      pom {
+        name.set(project.name)
+        description.set(project.description)
+
+        developers {
+          developer {
+            name.set("copyandexecute")
+          }
+        }
+
+        licenses {
+          license {
+            name.set("GNU General Public License, Version 3")
+            url.set("https://www.gnu.org/licenses/gpl-3.0.en.html")
+          }
+        }
+
+        url.set("https://github.com/${repo}")
+
+        scm {
+          connection.set("scm:git:git://github.com/${repo}.git")
+          url.set("https://github.com/${repo}/tree/main")
+        }
+      }
     }
   }
 }
-
 
