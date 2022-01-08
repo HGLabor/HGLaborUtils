@@ -1,6 +1,7 @@
 package de.hglabor.utils.noriskutils.workload
 
 import de.hglabor.utils.noriskutils.BlockPlacer
+import net.minecraft.world.level.block.state.BlockState
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -25,3 +26,23 @@ data class PlaceableBlock(
 
   val location: Location get() = Location(Bukkit.getWorld(worldId), x.toDouble(), y.toDouble(), z.toDouble())
 }
+
+data class PlaceableBlockNative(
+  val worldId: UUID,
+  val x: Int,
+  val y: Int,
+  val z: Int,
+  val state: BlockState,
+  val method: String,
+) : Workload {
+  override fun execute() {
+    val world = Bukkit.getWorld(worldId)
+    when (method) {
+      "setBlockInNativeWorld" -> BlockPlacer.setBlockInNativeWorld(world, x, y, z, state, true) //31s
+      // "setBlockInNativeChunk" -> BlockPlacer.setBlockInNativeChunk(world, x, y, z, type, true) //fast af but needs relog
+    }
+  }
+
+  val location: Location get() = Location(Bukkit.getWorld(worldId), x.toDouble(), y.toDouble(), z.toDouble())
+}
+
