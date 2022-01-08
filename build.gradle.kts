@@ -5,7 +5,7 @@ val javaVersion = "16"
 val mcVersion = "1.17.1"
 
 group = "de.hglabor"
-version = "${mcVersion}_v2"
+version = "${mcVersion}_v3"
 description = "utils for hglabor"
 
 java.targetCompatibility = JavaVersion.valueOf("VERSION_${javaVersion.replace(".", "_")}")
