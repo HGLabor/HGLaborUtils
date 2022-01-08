@@ -1,13 +1,16 @@
 package de.hglabor.utils.noriskutils
 
+import com.mojang.brigadier.StringReader
 import de.hglabor.utils.noriskutils.data.SimpleLoc
+import net.minecraft.commands.arguments.blocks.BlockStateParser
 import net.minecraft.nbt.NbtIo
-import org.bukkit.Material
+import net.minecraft.world.level.block.state.BlockState
 import java.io.InputStream
 
 object SchematicReader {
-  fun parseSchematic(inputStream: InputStream, ignoreAir: Boolean = true): Map<SimpleLoc, Material> {
-    val map = mutableMapOf<SimpleLoc, Material>()
+  fun parseSchematic(inputStream: InputStream, ignoreAir: Boolean = true): Map<SimpleLoc, BlockState> {
+    val map = mutableMapOf<SimpleLoc, BlockState>()
+    val blockPalette = mutableMapOf<Int, BlockState>()
 
     val nbt = NbtIo.readCompressed(inputStream)
     val width = nbt.getInt("Width")
@@ -16,22 +19,21 @@ object SchematicReader {
     val blocks = nbt.getByteArray("BlockData")
     val palette = nbt.getCompound("Palette")
 
-    val blockPalette = mutableMapOf<Int, String>()
-    palette.allKeys.forEach { blockPalette[palette.getInt(it)] = it }
 
-    for (i in blocks.indices) {
-      val block = blocks[i]
+    palette.allKeys.forEach { key ->
+      val state = BlockStateParser(StringReader(key), true).parse(true).state ?: return@forEach
+      blockPalette[palette.getInt(key)] = state
+    }
+
+    blocks.indices.forEach { i ->
+      val state = blockPalette[blocks[i].toInt()] ?: return@forEach
+      if (ignoreAir && state.isAir) return@forEach
+
       val x = i % (width * length) % width
       val y = i / (width * length)
       val z = i % (width * length) / width
-      //TODO remove [ as we dont check different variants of block (yet)
-      val string = (blockPalette[block.toInt()] ?: "AIR")
-        .replace("minecraft:".toRegex(), "")
-        .uppercase()
-        .substringBefore("[")
-      val material = Material.valueOf(string)
-      if (ignoreAir && material.isAir) continue
-      map[SimpleLoc(x, y, z)] = material
+
+      map[SimpleLoc(x, y, z)] = state
     }
     return map
   }
