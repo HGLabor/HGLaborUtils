@@ -6,8 +6,8 @@ import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftLivingEntity;
-import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftLivingEntity;
+import org.bukkit.craftbukkit.v1_18_R1.entity.CraftPlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.EntityTargetEvent;
 
@@ -43,7 +43,7 @@ public class LaborPathfinderFindTarget extends Goal {
       return false;
     }
 
-    mob.setGoalTarget(((CraftPlayer) target).getHandle(), EntityTargetEvent.TargetReason.CUSTOM, true);
+    mob.setTarget(((CraftPlayer) target).getHandle(), EntityTargetEvent.TargetReason.CUSTOM, true);
     return true;
   }
 

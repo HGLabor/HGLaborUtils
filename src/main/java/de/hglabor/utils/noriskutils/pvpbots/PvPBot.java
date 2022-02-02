@@ -18,7 +18,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -71,7 +71,7 @@ public class PvPBot extends net.minecraft.world.entity.monster.Zombie {
     this.playerDisguise = new PlayerDisguise(name);
     this.playerDisguise.setNameVisible(true);
     DisguiseAPI.disguiseEntity(this.getBukkitEntity(), playerDisguise);
-    this.setGoalTarget(target, EntityTargetEvent.TargetReason.CLOSEST_PLAYER, true);
+    this.setTarget(target, EntityTargetEvent.TargetReason.CLOSEST_PLAYER, true);
   }
 
   @Override
@@ -191,10 +191,10 @@ public class PvPBot extends net.minecraft.world.entity.monster.Zombie {
     return SoundEvents.PLAYER_SPLASH_HIGH_SPEED;
   }
 
-  @Override
+  /*@Override
   protected SoundEvent getFallDamageSound(int distance) {
     return distance > 4 ? SoundEvents.PLAYER_BIG_FALL : SoundEvents.PLAYER_SMALL_FALL;
-  }
+  }*/
 
   private class PathfinderFindTarget extends Goal {
     @Override
@@ -202,7 +202,7 @@ public class PvPBot extends net.minecraft.world.entity.monster.Zombie {
       if (target == null) {
         return false;
       }
-      PvPBot.this.setGoalTarget(target, EntityTargetEvent.TargetReason.CUSTOM, true);
+      PvPBot.this.setTarget(target, EntityTargetEvent.TargetReason.CUSTOM, true);
       return true;
     }
 
