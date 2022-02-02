@@ -47,9 +47,6 @@ dependencies {
 }
 
 tasks {
-  build {
-    dependsOn(reobfJar)
-  }
   withType<JavaCompile> {
     options.encoding = "UTF-8"
     val version = if (javaVersion.contains(".")) {
