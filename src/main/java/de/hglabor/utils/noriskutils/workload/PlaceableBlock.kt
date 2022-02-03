@@ -33,16 +33,21 @@ data class PlaceableBlockNative(
   val y: Int,
   val z: Int,
   val state: BlockState,
-  val method: String,
+  val method: BlockPlaceinator,
 ) : Workload {
   override fun execute() {
     val world = Bukkit.getWorld(worldId)
     when (method) {
-      "setBlockInNativeWorld" -> BlockPlacer.setBlockInNativeWorld(world, x, y, z, state, true) //31s
-      // "setBlockInNativeChunk" -> BlockPlacer.setBlockInNativeChunk(world, x, y, z, type, true) //fast af but needs relog
+      BlockPlaceinator.NATIVE_WORLD -> BlockPlacer.setBlockInNativeWorld(world, x, y, z, state, true) //31s
+      BlockPlaceinator.NATIVE_CHUNK -> BlockPlacer.setBlockInNativeChunk(world, x, y, z, state, false) //fast af but needs relog
     }
   }
 
   val location: Location get() = Location(Bukkit.getWorld(worldId), x.toDouble(), y.toDouble(), z.toDouble())
+}
+
+enum class BlockPlaceinator {
+  NATIVE_WORLD,
+  NATIVE_CHUNK
 }
 
