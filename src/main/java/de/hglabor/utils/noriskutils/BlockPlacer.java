@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_18_R1.util.CraftMagicNumbers;
@@ -28,5 +29,12 @@ public final class BlockPlacer {
     Level nmsWorld = ((CraftWorld) world).getHandle();
     BlockPos bp = new BlockPos(x, y, z);
     nmsWorld.setBlock(bp, state, applyPhysics ? 3 : 2);
+  }
+
+  public static void setBlockInNativeChunk(World world, int x, int y, int z, BlockState state, boolean applyPhysics) {
+    Level nmsWorld = ((CraftWorld) world).getHandle();
+    LevelChunk chunk = nmsWorld.getChunk(x >> 4, z >> 4);
+    BlockPos bp = new BlockPos(x, y, z);
+    chunk.setBlockState(bp, state, applyPhysics);
   }
 }
