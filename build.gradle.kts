@@ -38,7 +38,7 @@ dependencies {
   paperDevBundle("$mcVersion-R0.1-SNAPSHOT")
   compileOnly("io.papermc.paper:paper-api:$mcVersion-R0.1-SNAPSHOT")
   compileOnly("net.axay:kspigot:1.18.0")
-  compileOnly("net.luckperms:api:5.3")
+  compileOnly("net.luckperms:api:5.4")
   compileOnly("org.apache.commons:commons-lang3:3.12.0")
   compileOnly("com.comphenix.protocol:ProtocolLib:4.7.0")
   compileOnly("LibsDisguises:LibsDisguises:10.0.23")
