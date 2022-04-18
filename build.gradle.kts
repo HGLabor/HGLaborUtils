@@ -73,20 +73,6 @@ signing {
   sign(publishing.publications)
 }
 
-
-
-publishing {
-  publications {
-    create<MavenPublication>("maven") {
-      this.groupId = project.group.toString()
-      this.artifactId = project.name.toLowerCase()
-      this.version = project.version.toString()
-      from(components["java"])
-    }
-  }
-}
-
-/*
 publishing {
   repositories {
     maven("https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
@@ -100,9 +86,8 @@ publishing {
 
   publications {
     create<MavenPublication>(project.name) {
-      artifact(tasks.reobfJar)
-      artifact(tasks.named("javadocJar"))
-      artifact(tasks.named("sourcesJar"))
+      from(components["java"])
+      artifact(tasks.jar.get().outputs.files.single())
 
       this.groupId = project.group.toString()
       this.artifactId = project.name.toLowerCase()
@@ -135,4 +120,4 @@ publishing {
     }
   }
 }
-*/
+
