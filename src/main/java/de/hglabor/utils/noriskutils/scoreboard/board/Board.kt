@@ -106,7 +106,7 @@ class Board(var updatingPeriod: Long = 20L) {
                 scoreboard.registerNewObjective("showhealth", Criterias.HEALTH, Criterias.HEALTH).apply {
                     displaySlot = DisplaySlot.BELOW_NAME
                     displayName = "${ChatColor.RED}\u2764"
-                    getScore("${ChatColor.WHITE}").score = 0   
+                    getScore("${ChatColor.WHITE}").score = 0
                 }
             }
         }

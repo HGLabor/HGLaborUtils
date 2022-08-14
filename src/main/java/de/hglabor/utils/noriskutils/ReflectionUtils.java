@@ -179,7 +179,9 @@ public final class ReflectionUtils {
         return isChar(field.getType());
     }
 
-    public static boolean isMaterial(Field field) { return isMaterial(field.getType()); }
+    public static boolean isMaterial(Field field) {
+        return isMaterial(field.getType());
+    }
 
     public static boolean isByte(Class<?> clazz) {
         return clazz == byte.class || clazz == Byte.class;
@@ -213,5 +215,7 @@ public final class ReflectionUtils {
         return clazz == char.class || clazz == Character.class;
     }
 
-    public static boolean isMaterial(Class<?> clazz) { return clazz.equals(Material.class); }
+    public static boolean isMaterial(Class<?> clazz) {
+        return clazz.equals(Material.class);
+    }
 }

@@ -47,7 +47,11 @@ class BoardBuilder(val board: Board) {
     }
 }
 
-inline fun Player.setScoreboard(updatingPeriod: Long = 20, bottomToTop: Boolean = true, crossinline builder: BoardBuilder.() -> Unit): Board {
+inline fun Player.setScoreboard(
+    updatingPeriod: Long = 20,
+    bottomToTop: Boolean = true,
+    crossinline builder: BoardBuilder.() -> Unit
+): Board {
     return Board(updatingPeriod).apply {
         BoardBuilder(this).apply(builder).invoke(bottomToTop)
     }.setScoreboard(this)

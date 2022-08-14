@@ -6,7 +6,7 @@ public final class TimeConverter {
 
     public static String stringify(int totalSecs) {
         if (totalSecs > 3600) {
-            return stringify(totalSecs,"%02d:%02d:%02d");
+            return stringify(totalSecs, "%02d:%02d:%02d");
         }
         int minutes = (totalSecs % 3600) / 60;
         int seconds = totalSecs % 60;

@@ -33,7 +33,8 @@ public final class InventoryBuilder {
 
     public InventoryBuilder withItem(ItemStack itemStack, int slot) {
         items.put(slot, itemStack);
-        clickActions.put(itemStack, clickEvent -> {});
+        clickActions.put(itemStack, clickEvent -> {
+        });
         return this;
     }
 
@@ -60,7 +61,7 @@ public final class InventoryBuilder {
 
     public Inventory build() {
         Inventory inventory;
-        if(inventoryType != null) {
+        if (inventoryType != null) {
             inventory = Bukkit.createInventory(null, inventoryType, inventoryName);
         } else {
             inventory = Bukkit.createInventory(null, inventorySlots, inventoryName);
@@ -72,10 +73,10 @@ public final class InventoryBuilder {
                 @EventHandler
                 public void onInventoryClick(InventoryClickEvent event) {
                     Player player = (Player) event.getWhoClicked();
-                    if(event.getClickedInventory() != null) {
-                        if(event.getView().getTitle().equalsIgnoreCase(inventoryName)) {
-                            if(event.getCurrentItem() != null) {
-                                if(event.getCurrentItem().isSimilar(items.get(i))) {
+                    if (event.getClickedInventory() != null) {
+                        if (event.getView().getTitle().equalsIgnoreCase(inventoryName)) {
+                            if (event.getCurrentItem() != null) {
+                                if (event.getCurrentItem().isSimilar(items.get(i))) {
                                     event.setCancelled(true);
                                     consumer.accept(event);
                                     event.getHandlers().unregister(this);
